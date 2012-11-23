@@ -18,6 +18,11 @@ NSString *deviceIphone = @"iPhone";
 NSString *deviceIpad = @"iPad";
 NSString *deviceIpadRetina = @"iPad (Retina)";
 
+
+NSString *deviceIphone3 = @"iPhone";
+NSString *deviceIphone4 = @"iPhone (Retina 3.5-inch)";
+NSString *deviceIphone5 = @"iPhone (Retina 4-inch)";
+
 /**
  * A simple iPhoneSimulatorRemoteClient framework.
  */
@@ -37,8 +42,8 @@ NSString *deviceIpadRetina = @"iPad (Retina)";
   fprintf(stderr, "  --verbose                       Set the output level to verbose\n");
   fprintf(stderr, "  --exit                          Exit after startup\n");
   fprintf(stderr, "  --sdk <sdkversion>              The iOS SDK version to run the application on (defaults to the latest)\n");
-  fprintf(stderr, "  --family <device family>        The device type that should be simulated (defaults to `iphone')\n");
-  fprintf(stderr, "  --retina                        Start a retina device\n");
+  fprintf(stderr, "  --family <device family>        The device type that should be simulated (defaults to `iphone' one of iphone iphoneRetina3.5inch iphoneRetina4inch, ipad, ipadRetina)\n");
+    //  fprintf(stderr, "  --retina                        Start a retina device\n");
   fprintf(stderr, "  --uuid <uuid>                   A UUID identifying the session (is that correct?)\n");
   fprintf(stderr, "  --env <environment file path>   A plist file containing environment key-value pairs that should be set\n");
   fprintf(stderr, "  --setenv NAME=VALUE             Set an environment variable\n");
@@ -243,24 +248,42 @@ NSString *deviceIpadRetina = @"iPad (Retina)";
 }
 
 - (void) changeDeviceType:(NSString *)family retina:(BOOL)retina {
-  NSString *devicePropertyValue;
-  if (retina) {
+    NSString *devicePropertyValue;
+//  if (retina) {
+//    if (verbose) {
+//      nsprintf(@"using retina");
+//    }
+//    if ([family isEqualToString:@"ipad"]) {
+//      devicePropertyValue = deviceIpadRetina;
+//    }
+//    else {
+//      devicePropertyValue = deviceIphoneRetina;
+//    }
+//  } else {
+//    if ([family isEqualToString:@"ipad"]) {
+//      devicePropertyValue = deviceIpad;
+//    } else {
+//      devicePropertyValue = deviceIphone;
+//    }
+//  }
+    
+    if ([family isEqualToString:@"iphone"]) {
+        devicePropertyValue = deviceIphone;
+    } else if ([family isEqualToString:@"iphoneRetina3.5inch"]) {
+        devicePropertyValue = deviceIphone4;
+    } else if ([family isEqualToString:@"iphoneRetina4inch"]) {
+        devicePropertyValue = deviceIphone5;
+    } else if ([family isEqualToString:@"ipad"]) {
+        devicePropertyValue = deviceIpad;
+    } else if ([family isEqualToString:@"ipadRetina"]) {
+        devicePropertyValue = deviceIpadRetina;
+    }
+    
     if (verbose) {
-      nsprintf(@"using retina");
+        nsprintf(@"device: %@", devicePropertyValue);
     }
-    if ([family isEqualToString:@"ipad"]) {
-      devicePropertyValue = deviceIpadRetina;
-    }
-    else {
-      devicePropertyValue = deviceIphoneRetina;
-    }
-  } else {
-    if ([family isEqualToString:@"ipad"]) {
-      devicePropertyValue = deviceIpad;
-    } else {
-      devicePropertyValue = deviceIphone;
-    }
-  }
+    
+    
   CFPreferencesSetAppValue((CFStringRef)deviceProperty, (CFPropertyListRef)devicePropertyValue, (CFStringRef)simulatorPrefrencesName);
   CFPreferencesAppSynchronize((CFStringRef)simulatorPrefrencesName);
 }
